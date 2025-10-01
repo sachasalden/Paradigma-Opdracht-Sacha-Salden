@@ -36,6 +36,12 @@ defmodule Chatbot do
           {"Niet zo best...", fn -> IO.puts("Sterkte! Praat erover met iemand die je vertrouwt ❤️") end}
         ])
 
+      String.contains?(input, "grap") ->
+        IO.puts("Wil je een grap horen?")
+        show_options([
+          {"Ja, vertel een grap!", fn -> IO.puts("Waarom zijn Elixir-programmeurs altijd vrolijk? Alles is immutable! 😂") end},
+          {"Nee, liever niet.", fn -> IO.puts("Geen probleem! We kletsen gewoon verder 🙂") end}
+        ])
 
       String.contains?(input, "naam") ->
         generate_response(fn -> IO.puts("Ik ben een simpele chatbot ") end)
