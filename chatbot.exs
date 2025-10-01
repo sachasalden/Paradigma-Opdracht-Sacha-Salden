@@ -1,15 +1,13 @@
 defmodule Chatbot do
   @moduledoc """
-  Eenvoudige chatbot die reageert op patronen in de invoer.
+  Chatbot met patronen en antwoordopties via higher-order functions.
   """
 
-  # Functie om de bot te starten
   def start do
     IO.puts("Chatbot gestart! Typ 'stop' om af te sluiten.")
     loop()
   end
 
-  # Hoofdloop van de chatbot
   defp loop do
     input = IO.gets("> ") |> String.trim()
 
@@ -23,25 +21,47 @@ defmodule Chatbot do
     end
   end
 
-  # Higher-order functie die een reactie geeft
-  defp generate_response(fun) do
-    fun.()
-  end
+  defp generate_response(fun), do: fun.()
 
-  # Reageer op bepaalde invoer
   defp respond(input) do
     cond do
       String.contains?(input, "hallo") ->
-        generate_response(fn -> IO.puts("Hoi! Hoe gaat het?") end)
+        generate_response(fn -> IO.puts("Hoi! Hoe gaat het met je?") end)
 
       String.contains?(input, "hoe gaat") ->
-        generate_response(fn -> IO.puts("Met mij gaat het prima, bedankt!") end)
+        IO.puts("Met mij gaat het prima! En met jou?")
+        show_options([
+          {"Goed!", fn -> IO.puts("Mooi zo! Blijf zo doorgaan 😃") end},
+          {"Mwah, kan beter.", fn -> IO.puts("Hopelijk knapt je dag nog op 💪") end},
+          {"Niet zo best...", fn -> IO.puts("Sterkte! Praat erover met iemand die je vertrouwt ❤️") end}
+        ])
+
 
       String.contains?(input, "naam") ->
-        generate_response(fn -> IO.puts("Ik ben een simpele Elixir chatbot 🤖") end)
+        generate_response(fn -> IO.puts("Ik ben een simpele chatbot ") end)
 
       true ->
         generate_response(fn -> IO.puts("Daar heb ik nog geen antwoord op...") end)
+    end
+  end
+
+  # Hier gebruiken we een higher-order function: de opties zijn tuples van {label, functie}
+  defp show_options(options) do
+    Enum.with_index(options, 1)
+    |> Enum.each(fn {{label, _}, i} -> IO.puts("#{i}. #{label}") end)
+
+    choice =
+      IO.gets("Kies een optie (nummer): ")
+      |> String.trim()
+      |> Integer.parse()
+
+    case choice do
+      {num, _} when num >= 1 and num <= length(options) ->
+        {_label, action} = Enum.at(options, num - 1)
+        generate_response(action)   # hier roep ik de gekozen functie aan
+
+      _ ->
+        IO.puts("Ongeldige keuze, probeer opnieuw.")
     end
   end
 end
