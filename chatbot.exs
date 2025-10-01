@@ -51,7 +51,7 @@ defmodule Chatbot do
     end
   end
 
-  # Hier gebruiken we een higher-order function: de opties zijn tuples van {label, functie}
+  # Hier gebruik ik een higher-order function: de opties zijn tuples van {label, functie}
   defp show_options(options) do
     Enum.with_index(options, 1)
     |> Enum.each(fn {{label, _}, i} -> IO.puts("#{i}. #{label}") end)
